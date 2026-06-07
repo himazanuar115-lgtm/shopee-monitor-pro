@@ -1,0 +1,288 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============ AUTH MODELS ============
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String
+  password  String
+  role      UserRole   @default(STAFF)
+  avatar    String?
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  stores        Store[]
+  orders        Order[]
+  chats         Chat[]
+  notifications Notification[]
+  reports       Report[]
+
+  @@index([email])
+  @@index([role])
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+  VIEWER
+}
+
+// ============ STORE MODELS ============
+
+model Store {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name            String
+  shopeeId        String   @unique
+  apiKey          String
+  apiSecret       String
+  status          StoreStatus @default(ACTIVE)
+  rating          Float    @default(0)
+  totalOrders     Int      @default(0)
+  totalRevenue    Float    @default(0)
+  totalProducts   Int      @default(0)
+  totalChats      Int      @default(0)
+  totalVisitors   Int      @default(0)
+  conversionRate  Float    @default(0)
+  
+  lastSyncAt      DateTime?
+  isConnected     Boolean  @default(false)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  orders       Order[]
+  products     Product[]
+  chats        Chat[]
+  notifications Notification[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+enum StoreStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING
+}
+
+// ============ ORDER MODELS ============
+
+model Order {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  storeId         String
+  store           Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  orderNumber     String
+  buyerName       String
+  buyerPhone      String?
+  buyerAddress    String?
+  totalAmount     Float
+  status          OrderStatus
+  paymentStatus   PaymentStatus @default(PENDING)
+  
+  items           OrderItem[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  completedAt     DateTime?
+
+  @@unique([storeId, orderNumber])
+  @@index([userId])
+  @@index([storeId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  quantity  Int
+  price     Float
+  
+  @@index([orderId])
+  @@index([productId])
+}
+
+// ============ PRODUCT MODELS ============
+
+model Product {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  shopeeId    String
+  name        String
+  sku         String
+  description String?
+  price       Float
+  stock       Int
+  sold        Int      @default(0)
+  images      String[] @default([])
+  status      ProductStatus @default(ACTIVE)
+  
+  isLowStock  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orderItems  OrderItem[]
+
+  @@unique([storeId, sku])
+  @@index([userId])
+  @@index([storeId])
+  @@index([status])
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  OUT_OF_STOCK
+  DISCONTINUED
+}
+
+// ============ CHAT MODELS ============
+
+model Chat {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  buyerName   String
+  buyerAvatar String?
+  productName String?
+  message     String
+  
+  status      ChatStatus @default(UNREAD)
+  isReplied   Boolean    @default(false)
+  reply       String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  repliedAt   DateTime?
+
+  @@index([userId])
+  @@index([storeId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum ChatStatus {
+  UNREAD
+  READ
+  REPLIED
+}
+
+// ============ NOTIFICATION MODELS ============
+
+model Notification {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  storeId     String?
+  store       Store?   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  type        NotificationType
+  title       String
+  message     String
+  data        Json?
+  
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([storeId])
+  @@index([isRead])
+  @@index([createdAt])
+}
+
+enum NotificationType {
+  NEW_ORDER
+  NEW_CHAT
+  LOW_STOCK
+  RATING_DROP
+  STORE_OFFLINE
+  PAYMENT_RECEIVED
+}
+
+// ============ REPORT MODELS ============
+
+model Report {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title       String
+  description String?
+  type        ReportType
+  
+  storeIds    String[]
+  startDate   DateTime
+  endDate     DateTime
+  
+  totalRevenue    Float?
+  totalOrders     Int?
+  totalProducts   Int?
+  totalChats      Int?
+  conversionRate  Float?
+  
+  data        Json?
+  fileUrl     String?
+  
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+enum ReportType {
+  DAILY
+  WEEKLY
+  MONTHLY
+  CUSTOM
+}
