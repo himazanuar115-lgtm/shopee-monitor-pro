@@ -97,8 +97,15 @@ export async function GET(request: NextRequest) {
     }
 
     // ── 2. Exchange code for tokens ──
-    const partnerId = process.env.SHOPEE_APP_ID;
-    const partnerKey = process.env.SHOPEE_APP_SECRET;
+    let partnerId = process.env.SHOPEE_APP_ID;
+    let partnerKey = process.env.SHOPEE_APP_SECRET;
+
+    // Dev Bypass: Use fallback dummy credentials if missing in development mode
+    if (process.env.NODE_ENV === 'development' && (!partnerId || !partnerKey)) {
+      console.warn("[Dev Bypass] SHOPEE_APP_ID or SECRET missing. Falling back to local dummy credentials.");
+      partnerId = partnerId || "123456";
+      partnerKey = partnerKey || "dummy_secret_key";
+    }
 
     if (!partnerId || !partnerKey) {
       console.error('[shopee-callback] SHOPEE_APP_ID or SHOPEE_APP_SECRET not configured');
