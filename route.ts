@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { syncOrdersForStore } from '@/lib/shopee/order-sync';
+import { syncOrdersForStore } from './lib/shopee/order-sync';
 
 /**
  * POST /api/orders/sync
- * 
- * Endpoint untuk memicu sinkronisasi pesanan Shopee untuk toko tertentu.
+ * * Endpoint untuk memicu sinkronisasi pesanan Shopee untuk toko tertentu.
  */
 export async function POST(request: NextRequest) {
   try {
