@@ -27,11 +27,13 @@ import {
 import { Product } from '@/types/product';
 import { Store } from '@/types/store';
 import { formatCurrency } from '@/lib/utils';
+import ProductCreateDialog from '@/components/products/ProductCreateDialog';
 
 export default function ProductsPage() {
   const [search, setSearch] = useState('');
   const [storeFilter, setStoreFilter] = useState('ALL');
   const [stockFilter, setStockFilter] = useState('ALL');
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products'],
@@ -79,7 +81,17 @@ export default function ProductsPage() {
           <h1 className="text-3xl font-bold text-emphasis">Produk</h1>
           <p className="mt-2 text-muted">Kelola semua produk dari toko Anda</p>
         </div>
-        <Button>
+        {/* Product create dialog */}
+        <ProductCreateDialog
+          open={isAddOpen}
+          onOpenChange={setIsAddOpen}
+          stores={stores}
+        />
+        <Button
+          type="button"
+          onClick={() => setIsAddOpen(true)}
+          disabled={stores.length === 0}
+        >
           <Plus className="mr-2 h-4 w-4" />
           Tambah Produk
         </Button>
