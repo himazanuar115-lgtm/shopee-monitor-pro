@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { getToken } from 'next-auth/jwt';
 import { prisma } from '@/lib/db';
 import { storeTokens } from '@/lib/shopee/token-manager';
@@ -31,6 +32,7 @@ export async function GET(request: NextRequest) {
     const code = url.searchParams.get('code');
     const state = url.searchParams.get('state');
     const error = url.searchParams.get('error');
+    const shopIdParam = url.searchParams.get('shop_id');
 
     const storedState = request.cookies.get('shopee_oauth_state')?.value;
 
@@ -58,11 +60,11 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    if (!code) {
-      console.error('[shopee-callback] Missing authorization code');
+    if (!code || !shopIdParam) {
+      console.error('[shopee-callback] Missing authorization code or shop_id');
       response.headers.set(
         'Location',
-        '/stores?error=missing_code&message=No authorization code received',
+        '/stores?error=missing_params&message=Missing authorization code or shop_id',
       );
       return new NextResponse(null, {
         status: 302,
@@ -110,15 +112,26 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    // ── 2a. Generate Signature for Shopee API V2 ──
+    const path = '/api/v2/auth/token/get';
+    const timestamp = Math.floor(Date.now() / 1000);
+    const baseString = `${partnerId}${path}${timestamp}`;
+    const sign = crypto.createHmac('sha256', partnerKey).update(baseString).digest('hex');
+
+    const tokenUrl = new URL('https://partner.shopeemobile.com/api/v2/auth/token/get');
+    tokenUrl.searchParams.set('partner_id', partnerId);
+    tokenUrl.searchParams.set('timestamp', timestamp.toString());
+    tokenUrl.searchParams.set('sign', sign);
+
     const tokenResponse = await fetch(
-      'https://partner.shopeemobile.com/api/v2/auth/token/get',
+      tokenUrl.toString(),
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           partner_id: parseInt(partnerId, 10),
           code,
-          shop_id: parseInt(partnerId, 10), // partner_id as shop_id per Shopee v2 spec for token exchange
+          shop_id: parseInt(shopIdParam, 10),
         }),
       },
     );
