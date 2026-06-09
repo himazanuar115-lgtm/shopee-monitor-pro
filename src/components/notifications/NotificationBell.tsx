@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import NotificationDropdown from './NotificationDropdown';
 import { Notification } from '@/types/notification';
 
 export default function NotificationBell() {
@@ -97,53 +98,17 @@ export default function NotificationBell() {
 
       {isOpen && pos &&
         createPortal(
-          <div
-            ref={panelRef}
-            className="surface-glass"
-            style={{
-              position: 'fixed',
-              top: pos.top,
-              left: pos.left,
-              width: 320, // w-80
-              zIndex: 50,
-            }}
+          <div 
+            ref={panelRef} 
+            style={{ position: 'fixed', top: pos.top, left: pos.left, zIndex: 50 }}
           >
-            <div className="border-b surface-divider p-4">
-              <h3 className="font-semibold text-emphasis">Notifikasi</h3>
-            </div>
-            <div className="max-h-96 overflow-y-auto">
-              {notifications.length === 0 ? (
-                <div className="p-4 text-center text-sm text-muted">Tidak ada notifikasi</div>
-              ) : (
-                notifications.slice(0, 10).map((notification: Notification) => (
-                  <div
-                    key={notification.id}
-                    className="surface-hover cursor-pointer border-b surface-divider p-4 transition-colors last:border-0"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div
-                        className={`mt-2 h-2 w-2 rounded-full ${
-                          notification.isRead
-                            ? 'surface-dot-muted'
-                            : 'surface-dot-primary'
-                        }`}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-emphasis">{notification.title}</p>
-                        <p className="mt-1 text-xs text-muted">{notification.message}</p>
-                        <p className="mt-2 text-xs text-muted">
-                          {new Date(notification.createdAt).toLocaleDateString('id-ID')}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
+            <NotificationDropdown 
+              notifications={notifications} 
+              onClose={() => setIsOpen(false)} 
+            />
           </div>,
           document.body
         )}
     </div>
   );
 }
-

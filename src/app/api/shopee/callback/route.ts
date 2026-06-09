@@ -27,6 +27,74 @@ export async function GET(request: NextRequest) {
 
     const userId = token.id as string;
 
+    // --- Dev Mock Bypass ---
+    if (process.env.NODE_ENV === 'development') {
+      const url = new URL(request.url);
+      const code = url.searchParams.get('code');
+      const state = url.searchParams.get('state');
+      const shopIdParam = url.searchParams.get('shop_id');
+      const storedState = request.cookies.get('shopee_oauth_state')?.value;
+
+      // Check for mock parameters and valid state
+      if (code === 'mock_auth_code_for_dev' && shopIdParam === '99' && verifyOAuthState(state || '', storedState || '')) {
+        console.warn("[Dev Mock Activated] Bypassing real Shopee token exchange. Creating mock store connection.");
+
+        const mockShopId = 99; // Consistent mock shop ID
+        const mockShopName = "Bunda Store (Simulasi Local)";
+        const mockAccessToken = "mock_access_token_dev";
+        const mockRefreshToken = "mock_refresh_token_dev";
+        const now = new Date();
+        const accessTokenExpiresAt = new Date(now.getTime() + 3600 * 1000); // 1 hour
+        const refreshTokenExpiresAt = new Date(now.getTime() + 365 * 24 * 3600 * 1000); // 1 year
+
+        // Ensure a mock store exists for the user
+        let store = await prisma.store.findFirst({
+          where: { userId, shopeeShopId: mockShopId },
+        });
+
+        if (!store) {
+          store = await prisma.store.create({
+            data: {
+              userId,
+              name: mockShopName,
+              shopeeId: `SHOP-${mockShopId}`, // Unique string ID for Shopee
+              apiKey: 'mock_api_key_dev',
+              apiSecret: 'mock_api_secret_dev',
+              shopeeShopId: mockShopId,
+              isConnected: true,
+              status: 'ACTIVE',
+              rating: 0,
+              totalOrders: 0,
+              totalRevenue: 0,
+              totalProducts: 0,
+              totalChats: 0,
+              totalVisitors: 0,
+              conversionRate: 0,
+            },
+          });
+        } else {
+          // Update existing mock store
+          store = await prisma.store.update({
+            where: { id: store.id },
+            data: { name: mockShopName, isConnected: true, status: 'ACTIVE' },
+          });
+        }
+
+        // Store mock tokens
+        await storeTokens({
+          userId, storeId: store.id, shopId: mockShopId, shopName: mockShopName,
+          accessToken: mockAccessToken, refreshToken: mockRefreshToken,
+          accessTokenExpiresAt, refreshTokenExpiresAt,
+        });
+
+        console.log(`[Dev Mock] Successfully connected mock shop ${mockShopId} for user ${userId}`);
+        const mockResponse = NextResponse.redirect(new URL('/stores?connected=true', request.url));
+        mockResponse.cookies.set('shopee_oauth_state', '', { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 0, path: '/' });
+        return mockResponse;
+      }
+    }
+    // --- End Dev Mock Bypass ---
+
     // ── 1. Verify state ──
     const url = new URL(request.url);
     const code = url.searchParams.get('code');
