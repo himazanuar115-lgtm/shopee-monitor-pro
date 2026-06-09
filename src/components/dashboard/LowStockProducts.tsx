@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Product } from '@/types/product';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertTriangle } from 'lucide-react';
@@ -20,10 +19,10 @@ export default function LowStockProducts() {
   });
 
   return (
-    <Card className="border-yellow-900/50">
+    <Card className="surface-destructive">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <AlertTriangle className="h-5 w-5 text-yellow-500" />
+          <AlertTriangle className="h-5 w-5 text-[hsl(var(--destructive))]" />
           <div>
             <CardTitle className="text-base">Stok Menipis</CardTitle>
             <CardDescription>
@@ -40,7 +39,7 @@ export default function LowStockProducts() {
             ))}
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center py-8 text-slate-400">
+          <div className="py-8 text-center text-muted">
             <p className="text-sm">Semua produk memiliki stok yang cukup</p>
           </div>
         ) : (
@@ -48,17 +47,17 @@ export default function LowStockProducts() {
             {products.slice(0, 10).map((product: Product) => (
               <div
                 key={product.id}
-                className="flex items-center justify-between p-3 bg-yellow-950/20 rounded-lg border border-yellow-900/50"
+                className="surface-row surface-destructive flex items-center justify-between p-3"
               >
                 <div className="flex-1">
-                  <p className="font-medium text-white text-sm">{product.name}</p>
-                  <p className="text-xs text-slate-400 mt-1">SKU: {product.sku}</p>
+                  <p className="text-sm font-medium text-emphasis">{product.name}</p>
+                  <p className="mt-1 text-xs text-muted">SKU: {product.sku}</p>
                 </div>
                 <div className="text-right ml-4">
-                  <p className="font-semibold text-yellow-400 text-sm">
+                  <p className="font-semibold text-[hsl(var(--destructive))] text-sm">
                     {product.stock} unit
                   </p>
-                  <p className="text-xs text-slate-400">Terjual: {product.sold}</p>
+                  <p className="text-xs text-muted">Terjual: {product.sold}</p>
                 </div>
               </div>
             ))}

@@ -32,34 +32,34 @@ export default function NotificationBell() {
       >
         <Bell size={20} />
         {unreadCount > 0 && (
-          <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-red-600">
+          <Badge className="surface-badge-danger absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center p-0">
             {unreadCount}
           </Badge>
         )}
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-50">
-          <div className="p-4 border-b border-slate-700">
-            <h3 className="font-semibold text-white">Notifikasi</h3>
+        <div className="surface-glass absolute right-0 z-50 mt-2 w-80">
+          <div className="border-b surface-divider p-4">
+            <h3 className="font-semibold text-emphasis">Notifikasi</h3>
           </div>
           <div className="max-h-96 overflow-y-auto">
             {notifications.length === 0 ? (
-              <div className="p-4 text-center text-slate-400 text-sm">
+              <div className="p-4 text-center text-sm text-muted">
                 Tidak ada notifikasi
               </div>
             ) : (
               notifications.slice(0, 10).map((notification: Notification) => (
                 <div
                   key={notification.id}
-                  className="p-4 border-b border-slate-700 last:border-0 hover:bg-slate-700/50 cursor-pointer transition-colors"
+                  className="surface-hover cursor-pointer border-b surface-divider p-4 transition-colors last:border-0"
                 >
                   <div className="flex items-start gap-3">
-                    <div className={`w-2 h-2 rounded-full mt-2 ${notification.isRead ? 'bg-slate-500' : 'bg-blue-500'}`} />
+                    <div className={`mt-2 h-2 w-2 rounded-full ${notification.isRead ? 'surface-dot-muted' : 'surface-dot-primary'}`} />
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-white text-sm">{notification.title}</p>
-                      <p className="text-xs text-slate-400 mt-1">{notification.message}</p>
-                      <p className="text-xs text-slate-500 mt-2">
+                      <p className="text-sm font-medium text-emphasis">{notification.title}</p>
+                      <p className="mt-1 text-xs text-muted">{notification.message}</p>
+                      <p className="mt-2 text-xs text-muted">
                         {new Date(notification.createdAt).toLocaleDateString('id-ID')}
                       </p>
                     </div>

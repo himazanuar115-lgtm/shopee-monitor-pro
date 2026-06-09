@@ -6,7 +6,7 @@ import { Chat } from '@/types/chat';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { NOTIFICATION_TYPES } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 
 export default function RecentChats() {
   const { data: chats = [], isLoading } = useQuery({
@@ -39,29 +39,30 @@ export default function RecentChats() {
             {chats.slice(0, 10).map((chat: Chat) => (
               <div
                 key={chat.id}
-                className={`p-3 rounded-lg border transition-colors ${
+                className={cn(
+                  'p-3',
                   chat.status === 'UNREAD'
-                    ? 'bg-blue-950 border-blue-700'
-                    : 'bg-slate-700/50 border-slate-600'
-                }`}
+                    ? 'surface-row surface-row-active'
+                    : 'surface-row'
+                )}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-white text-sm">
+                    <p className="text-sm font-medium text-emphasis">
                       {chat.buyerName}
                     </p>
                     {chat.productName && (
-                      <p className="text-xs text-slate-400 mt-1">
+                      <p className="mt-1 text-xs text-muted">
                         Produk: {chat.productName}
                       </p>
                     )}
-                    <p className="text-xs text-slate-400 mt-1 truncate">
+                    <p className="mt-1 truncate text-xs text-muted">
                       {chat.message}
                     </p>
                   </div>
                   <Badge
                     variant="outline"
-                    className={chat.status === 'UNREAD' ? 'bg-blue-600 text-white border-0' : ''}
+                    className={chat.status === 'UNREAD' ? 'surface-badge-primary' : ''}
                   >
                     {chat.status === 'UNREAD' ? 'Baru' : 'Baca'}
                   </Badge>

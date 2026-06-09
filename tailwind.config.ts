@@ -65,7 +65,8 @@ const config = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  // tailwindcss-animate is optional; avoid build break if dependency is missing
+  plugins: [],
 } satisfies Config;
 
 export default config;

@@ -17,8 +17,6 @@ import {
 } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
-
 interface ChartProps {
   title: string;
   description?: string;
@@ -37,7 +35,7 @@ export default function Chart({
   xAxisKey = 'name',
 }: ChartProps) {
   return (
-    <Card>
+    <Card className="surface-glass">
       <CardHeader>
         <CardTitle className="text-base">{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
@@ -46,37 +44,39 @@ export default function Chart({
         <ResponsiveContainer width="100%" height={300}>
           {type === 'line' ? (
             <LineChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-              <XAxis dataKey={xAxisKey} stroke="#94a3b8" />
-              <YAxis stroke="#94a3b8" />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsla(var(--muted-foreground),0.18)" />
+              <XAxis dataKey={xAxisKey} stroke="hsla(var(--muted-foreground),0.7)" />
+              <YAxis stroke="hsla(var(--muted-foreground),0.7)" />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1e293b',
-                  border: '1px solid #475569',
+                  backgroundColor: 'hsla(var(--card),0.96)',
+                  border: '1px solid hsla(var(--border),0.22)',
+                  borderRadius: 'var(--radius-md)',
                 }}
               />
               <Legend />
               <Line
                 type="monotone"
                 dataKey={dataKey}
-                stroke="#3b82f6"
+                stroke="hsl(var(--primary))"
                 strokeWidth={2}
                 dot={false}
               />
             </LineChart>
           ) : type === 'bar' ? (
             <BarChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-              <XAxis dataKey={xAxisKey} stroke="#94a3b8" />
-              <YAxis stroke="#94a3b8" />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsla(var(--muted-foreground),0.18)" />
+              <XAxis dataKey={xAxisKey} stroke="hsla(var(--muted-foreground),0.7)" />
+              <YAxis stroke="hsla(var(--muted-foreground),0.7)" />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1e293b',
-                  border: '1px solid #475569',
+                  backgroundColor: 'hsla(var(--card),0.96)',
+                  border: '1px solid hsla(var(--border),0.22)',
+                  borderRadius: 'var(--radius-md)',
                 }}
               />
               <Legend />
-              <Bar dataKey={dataKey} fill="#3b82f6" radius={[8, 8, 0, 0]} />
+              <Bar dataKey={dataKey} fill="hsl(var(--primary))" radius={[8, 8, 0, 0]} />
             </BarChart>
           ) : (
             <PieChart>
@@ -87,17 +87,31 @@ export default function Chart({
                 labelLine={false}
                 label={({ name, value }) => `${name}: ${value}`}
                 outerRadius={80}
-                fill="#8884d8"
+                fill="hsl(var(--accent))"
                 dataKey={dataKey}
               >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                {data.map((_, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={
+                      index === 0
+                        ? 'hsl(var(--primary))'
+                        : index === 1
+                        ? 'hsl(var(--secondary))'
+                        : index === 2
+                        ? 'hsl(var(--accent))'
+                        : index === 3
+                        ? 'hsl(var(--destructive))'
+                        : 'hsla(var(--muted-foreground),0.85)'
+                    }
+                  />
                 ))}
               </Pie>
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1e293b',
-                  border: '1px solid #475569',
+                  backgroundColor: 'hsla(var(--card),0.96)',
+                  border: '1px solid hsla(var(--border),0.22)',
+                  borderRadius: 'var(--radius-md)',
                 }}
               />
             </PieChart>

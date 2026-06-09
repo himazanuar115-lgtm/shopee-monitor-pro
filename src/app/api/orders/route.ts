@@ -9,11 +9,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const url = new URL(request.url);
+    const limit = Number(url.searchParams.get('limit') || '20');
+    const status = url.searchParams.get('status');
+    const storeId = url.searchParams.get('storeId');
+
+    const where: any = { userId: token.id as string };
+    if (status) where.status = status;
+    if (storeId) where.storeId = storeId;
+
     const orders = await prisma.order.findMany({
-      where: { userId: token.id as string },
+      where,
       include: { items: true },
       orderBy: { createdAt: 'desc' },
-      take: 10,
+      take: limit,
     });
 
     return NextResponse.json(orders);

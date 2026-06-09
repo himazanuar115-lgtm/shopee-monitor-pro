@@ -12,33 +12,53 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error('Email and password required');
+        try {
+          console.log('[auth] credentials received:', {
+            email: credentials?.email,
+            hasPassword: !!credentials?.password,
+          });
+
+          if (!credentials?.email || !credentials?.password) {
+            return null;
+          }
+
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email },
+          });
+
+          console.log('[auth] user query result:', {
+            found: !!user,
+            id: user?.id,
+            email: user?.email,
+            role: user?.role,
+          });
+
+          if (!user) return null;
+
+          console.log('[auth] comparing password hash lengths:', {
+            passwordProvidedLen: credentials.password.length,
+            passwordHashLen: typeof user.password === 'string' ? user.password.length : null,
+          });
+
+          const isPasswordValid = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
+
+          console.log('[auth] password valid:', isPasswordValid);
+
+          if (!isPasswordValid) return null;
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        } catch (err) {
+          console.error('[auth] authorize error:', err);
+          return null;
         }
-
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
-
-        if (!user) {
-          throw new Error('User not found');
-        }
-
-        const isPasswordValid = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
-
-        if (!isPasswordValid) {
-          throw new Error('Invalid password');
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
       },
     }),
   ],

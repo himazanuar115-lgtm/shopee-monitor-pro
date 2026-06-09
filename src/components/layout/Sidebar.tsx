@@ -39,7 +39,7 @@ export default function Sidebar() {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 left-4 z-40 lg:hidden p-2 rounded-md bg-slate-800 border border-slate-700 text-white"
+        className="fixed top-4 left-4 z-40 lg:hidden surface-glass p-2 text-emphasis"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
@@ -47,19 +47,20 @@ export default function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed left-0 top-0 h-screen w-64 bg-slate-900 border-r border-slate-700 flex flex-col z-30 transition-transform duration-300 lg:translate-x-0',
-          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          'fixed left-0 top-0 h-screen w-64 flex flex-col z-30 transition-transform duration-300 lg:translate-x-0',
+          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+          'surface-glass rounded-none border-r surface-divider'
         )}
       >
         {/* Logo */}
-        <div className="p-6 border-b border-slate-700">
+        <div className="p-6 border-b surface-divider">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center">
-              <Store className="text-white" size={24} />
+            <div className="surface-icon flex h-10 w-10 items-center justify-center">
+              <Store size={24} />
             </div>
             <div>
-              <h1 className="font-bold text-white text-sm">Shopee Monitor</h1>
-              <p className="text-xs text-slate-400">Pro Dashboard</p>
+              <h1 className="text-sm font-bold text-emphasis">Shopee Monitor</h1>
+              <p className="text-xs text-muted">Pro Dashboard</p>
             </div>
           </div>
         </div>
@@ -75,10 +76,10 @@ export default function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                  'flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-200',
                   isActive
-                    ? 'bg-blue-600 text-white'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                    ? 'surface-row surface-row-active'
+                    : 'surface-row border-transparent bg-transparent text-muted'
                 )}
                 onClick={() => setIsOpen(false)}
               >
@@ -91,20 +92,20 @@ export default function Sidebar() {
 
         {/* User Info */}
         {session?.user && (
-          <div className="p-4 border-t border-slate-700 space-y-3">
+          <div className="space-y-3 border-t surface-divider p-4">
             <div className="flex items-center gap-3 px-2">
-              <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">
+              <div className="surface-avatar flex h-8 w-8 items-center justify-center text-xs font-bold">
                 {session.user.name?.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">{session.user.name}</p>
-                <p className="text-xs text-slate-400 truncate">{session.user.email}</p>
+                <p className="truncate text-sm font-medium text-emphasis">{session.user.name}</p>
+                <p className="truncate text-xs text-muted">{session.user.email}</p>
               </div>
             </div>
             <Button
               onClick={() => signOut({ callbackUrl: '/login' })}
               variant="ghost"
-              className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-950"
+              className="w-full justify-start text-[hsl(var(--destructive))] hover:bg-[hsla(var(--destructive),0.12)]"
             >
               <LogOut size={20} />
               Logout

@@ -1,0 +1,300 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Design tokens (deep premium SaaS palette) */
+  --radius: 20px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --space-card: 24px;
+  --space-card-sm: 16px;
+
+  --background: 238 22% 6%;
+  --foreground: 210 20% 98%;
+
+  --card: 240 18% 10%;
+  --card-foreground: 210 20% 98%;
+
+  /* Surfaces / borders */
+  --border: 240 18% 20%;
+  --input: 240 18% 18%;
+  --ring: 202 95% 55%;
+
+  /* Accents (very low saturation cyan/blue/purple) */
+  --primary: 222 92% 58%;
+  --primary-foreground: 230 25% 10%;
+
+  --secondary: 255 22% 14%;
+  --secondary-foreground: 210 20% 98%;
+
+  --accent: 258 68% 64%;
+  --accent-foreground: 230 25% 10%;
+
+  --muted: 240 18% 16%;
+  --muted-foreground: 215 18% 78%;
+
+  --popover: 240 18% 10%;
+  --popover-foreground: 210 20% 98%;
+
+  --destructive: 0 72% 58%;
+  --destructive-foreground: 210 20% 98%;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  color: hsl(var(--foreground));
+  background: radial-gradient(
+      1200px circle at 10% 0%,
+      rgba(59, 130, 246, 0.22),
+      transparent 55%
+    ),
+    radial-gradient(
+      900px circle at 80% 15%,
+      rgba(139, 92, 246, 0.18),
+      transparent 60%
+    ),
+    radial-gradient(
+      700px circle at 40% 100%,
+      rgba(16, 185, 129, 0.10),
+      transparent 60%
+    ),
+    linear-gradient(180deg, hsl(var(--background)), hsl(var(--background)));
+}
+
+/* Subtle static noise texture (no animation) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+.surface {
+  background-color: hsla(var(--card), 0.88);
+  border: 1px solid hsla(var(--border), 0.28);
+  color: hsl(var(--card-foreground));
+  border-radius: var(--radius);
+  backdrop-filter: saturate(180%) blur(16px);
+  box-shadow: 0 18px 55px hsla(var(--background), 0.28);
+}
+
+.surface-glass {
+  background-color: hsla(var(--card), 0.18);
+  border: 1px solid hsla(var(--border), 0.12);
+  color: hsl(var(--card-foreground));
+  border-radius: var(--radius);
+  backdrop-filter: saturate(180%) blur(18px);
+  box-shadow: 0 18px 55px hsla(var(--background), 0.22);
+}
+
+.surface-panel {
+  background-color: hsla(var(--card), 0.42);
+  border: 1px solid hsla(var(--border), 0.16);
+  color: hsl(var(--card-foreground));
+  border-radius: var(--radius);
+  backdrop-filter: saturate(160%) blur(12px);
+}
+
+.surface-muted {
+  background-color: hsla(var(--muted), 0.88);
+  border: 1px solid hsla(var(--border), 0.12);
+  color: hsl(var(--muted-foreground));
+  border-radius: var(--radius-md);
+}
+
+.surface-accent {
+  background-color: hsla(var(--primary), 0.12);
+  border: 1px solid hsla(var(--primary), 0.25);
+  color: hsl(var(--foreground));
+  border-radius: var(--radius-md);
+}
+
+.surface-destructive {
+  background-color: hsla(var(--destructive), 0.12);
+  border: 1px solid hsla(var(--destructive), 0.25);
+  color: hsl(var(--destructive-foreground));
+  border-radius: var(--radius-md);
+}
+
+.surface-row {
+  background-color: hsla(var(--card), 0.16);
+  border: 1px solid hsla(var(--border), 0.12);
+  border-radius: var(--radius-md);
+  color: hsl(var(--foreground));
+  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.surface-row:hover {
+  background-color: hsla(var(--card), 0.28);
+  border-color: hsla(var(--border), 0.22);
+}
+
+.surface-row-active {
+  background-color: hsla(var(--primary), 0.14);
+  border-color: hsla(var(--primary), 0.28);
+  color: hsl(var(--foreground));
+}
+
+.surface-hover:hover {
+  background-color: hsla(var(--card), 0.18);
+}
+
+.surface-table-section {
+  background-color: hsla(var(--card), 0.18);
+}
+
+.surface-table-row:hover {
+  background-color: hsla(var(--card), 0.18);
+}
+
+.surface-table-row[data-state='selected'] {
+  background-color: hsla(var(--primary), 0.12);
+}
+
+.surface-skeleton {
+  background-color: hsla(var(--muted), 0.65);
+  border-radius: var(--radius-md);
+}
+
+.surface-overlay {
+  background-color: hsla(var(--background), 0.82);
+}
+
+.surface-dot-muted {
+  background-color: hsla(var(--border), 0.35);
+}
+
+.surface-dot-primary {
+  background-color: hsl(var(--primary));
+}
+
+.surface-dot-success {
+  background-color: hsl(150 72% 66%);
+}
+
+.surface-dot-danger {
+  background-color: hsl(var(--destructive));
+}
+
+.app-canvas {
+  min-height: 100vh;
+  color: hsl(var(--foreground));
+}
+
+.surface-icon {
+  background-color: hsla(var(--primary), 0.16);
+  border: 1px solid hsla(var(--primary), 0.22);
+  border-radius: var(--radius-md);
+  color: hsl(var(--foreground));
+  box-shadow: inset 0 1px 0 hsla(var(--foreground), 0.08);
+}
+
+.surface-avatar {
+  background-color: hsla(var(--primary), 0.88);
+  border: 1px solid hsla(var(--border), 0.16);
+  border-radius: 999px;
+  color: hsl(var(--foreground));
+  box-shadow: 0 0 26px hsla(var(--primary), 0.28);
+}
+
+.surface-divider {
+  border-color: hsla(var(--border), 0.14);
+}
+
+.surface-control {
+  background-color: hsla(var(--card), 0.22);
+  border: 1px solid hsla(var(--border), 0.18);
+  border-radius: var(--radius-md);
+  color: hsl(var(--foreground));
+}
+
+.surface-control:focus,
+.surface-control:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsla(var(--primary), 0.32);
+}
+
+.surface-badge {
+  background-color: hsla(var(--muted), 0.55);
+  border: 1px solid hsla(var(--border), 0.16);
+  color: hsl(var(--foreground));
+  border-radius: 999px;
+}
+
+.surface-badge-primary {
+  background-color: hsla(var(--primary), 0.14);
+  border-color: hsla(var(--primary), 0.28);
+  color: hsl(var(--primary));
+}
+
+.surface-badge-success {
+  background-color: hsla(150, 68%, 46%, 0.14);
+  border-color: hsla(150, 68%, 46%, 0.28);
+  color: hsl(150 72% 66%);
+}
+
+.surface-badge-warning {
+  background-color: hsla(38, 92%, 56%, 0.14);
+  border-color: hsla(38, 92%, 56%, 0.28);
+  color: hsl(38 92% 68%);
+}
+
+.surface-badge-danger {
+  background-color: hsla(var(--destructive), 0.14);
+  border-color: hsla(var(--destructive), 0.28);
+  color: hsl(var(--destructive));
+}
+
+.text-system-primary {
+  color: hsl(var(--primary));
+}
+
+.text-system-success {
+  color: hsl(150 72% 66%);
+}
+
+.text-system-warning {
+  color: hsl(38 92% 68%);
+}
+
+.text-system-danger {
+  color: hsl(var(--destructive));
+}
+
+.text-muted {
+  color: hsl(var(--muted-foreground));
+}
+
+.text-subtle {
+  color: hsla(var(--foreground), 0.75);
+}
+
+.text-emphasis {
+  color: hsl(var(--foreground));
+}
+
+.border-surface {
+  border-color: hsla(var(--border), 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Ensure app content sits above the noise layer */
+#__next,
+body > div {
+  position: relative;
+  z-index: 1;
+}

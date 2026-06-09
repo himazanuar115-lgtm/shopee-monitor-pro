@@ -7,14 +7,12 @@ const apiClient = axios.create({
   },
 });
 
-// Add token to requests
+// NextAuth handles auth via cookies.
+// Do not attach Authorization header from localStorage.
 apiClient.interceptors.request.use((config) => {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
   return config;
 });
+
 
 // Handle responses
 apiClient.interceptors.response.use(

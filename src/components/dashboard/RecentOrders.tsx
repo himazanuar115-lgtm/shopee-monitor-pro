@@ -53,7 +53,7 @@ export default function RecentOrders() {
             <TableBody>
               {orders.map((order: Order) => (
                 <TableRow key={order.id}>
-                  <TableCell className="font-medium text-white">
+                  <TableCell className="font-medium text-emphasis">
                     {order.orderNumber}
                   </TableCell>
                   <TableCell>{order.buyerName}</TableCell>
@@ -66,7 +66,7 @@ export default function RecentOrders() {
                   <TableCell>
                     <Badge
                       variant="outline"
-                      className={order.paymentStatus === 'COMPLETED' ? 'bg-green-950 border-green-700 text-green-400' : ''}
+                      className={order.paymentStatus === 'COMPLETED' ? 'surface-badge-primary' : ''}
                     >
                       {PAYMENT_STATUSES[order.paymentStatus as keyof typeof PAYMENT_STATUSES]}
                     </Badge>

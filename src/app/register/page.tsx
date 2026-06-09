@@ -50,16 +50,16 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+    <div className="flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-8">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center">
-              <Store className="text-white" size={24} />
+            <div className="surface-icon flex h-10 w-10 items-center justify-center">
+              <Store size={24} />
             </div>
             <div>
-              <h1 className="font-bold text-white text-lg">Shopee Monitor</h1>
-              <p className="text-xs text-slate-400">Pro Dashboard</p>
+              <h1 className="text-lg font-bold text-emphasis">Shopee Monitor</h1>
+              <p className="text-xs text-muted">Pro Dashboard</p>
             </div>
           </div>
         </div>
@@ -74,7 +74,7 @@ export default function RegisterPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="p-3 bg-red-950 border border-red-900 rounded-md text-red-200 text-sm">
+                <div className="surface-destructive p-3 text-sm">
                   {error}
                 </div>
               )}
@@ -136,11 +136,11 @@ export default function RegisterPage() {
               </Button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-slate-400">
+            <div className="mt-6 text-center text-sm text-muted">
               Sudah punya akun?{' '}
               <Link
                 href="/login"
-                className="text-blue-400 hover:text-blue-300 font-medium"
+                className="font-medium text-system-primary"
               >
                 Masuk di sini
               </Link>

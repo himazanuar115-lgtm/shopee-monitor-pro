@@ -5,11 +5,21 @@ export enum StoreStatus {
   PENDING = 'PENDING',
 }
 
+export interface ShopeeConnectionData {
+  id: string;
+  shopId: number;
+  shopName: string;
+  isActive: boolean;
+  lastSyncAt: string | null;
+  createdAt: string;
+}
+
 export interface Store {
   id: string;
   userId: string;
   name: string;
   shopeeId: string;
+  shopeeShopId: number | null;
   status: StoreStatus;
   rating: number;
   totalOrders: number;
@@ -22,6 +32,7 @@ export interface Store {
   lastSyncAt?: Date;
   createdAt: Date;
   updatedAt: Date;
+  shopeeConnections?: ShopeeConnectionData[];
 }
 
 export interface CreateStoreRequest {

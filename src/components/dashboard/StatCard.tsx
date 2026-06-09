@@ -25,27 +25,40 @@ export default function StatCard({
   className,
 }: StatCardProps) {
   return (
-    <Card className={cn('hover:shadow-lg transition-shadow', className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <div>
-          <CardTitle className="text-sm font-medium text-slate-300">{title}</CardTitle>
+    <Card
+      className={cn(
+        'relative transition-transform duration-200 hover:-translate-y-1',
+        'before:absolute before:inset-0 before:bg-[radial-gradient(1000px_circle_at_0%_0%,hsla(var(--primary),0.18),transparent_40%),radial-gradient(900px_circle_at_100%_0%,hsla(var(--accent),0.12),transparent_45%)]',
+        'before:pointer-events-none',
+        className
+      )}
+    >
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-5 px-6">
+        <div className="min-w-0">
+          <CardTitle className="text-sm font-medium tracking-wide text-emphasis">
+            {title}
+          </CardTitle>
           {description && (
-            <CardDescription className="text-xs mt-1">{description}</CardDescription>
+            <CardDescription className="mt-2 text-xs">{description}</CardDescription>
           )}
         </div>
-        {Icon && <Icon className="h-5 w-5 text-slate-400" />}
+
+        {Icon && <Icon className="h-6 w-6 text-muted" />}
       </CardHeader>
-      <CardContent>
-        <div className="flex items-end justify-between">
-          <div className="text-3xl font-bold text-white">{value}</div>
+
+      <CardContent className="px-6 pb-6 pt-0">
+        <div className="flex items-end justify-between gap-4">
+          <div className="text-4xl font-semibold leading-none text-emphasis">{value}</div>
+
           {trend && (
             <div
               className={cn(
-                'text-sm font-medium',
-                trend.isPositive ? 'text-green-500' : 'text-red-500'
+                'surface-badge px-3 py-1 text-sm font-semibold',
+                trend.isPositive ? 'text-system-primary' : 'text-system-danger'
               )}
             >
-              {trend.isPositive ? '+' : '-'}{Math.abs(trend.value)}%
+              {trend.isPositive ? '+' : '-'}
+              {Math.abs(trend.value)}%
             </div>
           )}
         </div>
