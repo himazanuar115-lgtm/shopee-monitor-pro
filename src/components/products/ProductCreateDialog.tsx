@@ -133,11 +133,11 @@ export default function ProductCreateDialog({
           </Card>
         )}
 
-        <div className="space-y-4 py-2">
+        <div className="space-y-4 py-2 border border-white/5 rounded-md p-4">
           <div className="space-y-2">
             <Label>Nama Produk</Label>
             <Input
-              placeholder="Nama produk"
+              placeholder="Contoh: Headset Gaming RGB"
               value={form.name}
               onChange={(e) => setForm((s) => ({ ...s, name: e.target.value }))}
             />
@@ -146,7 +146,7 @@ export default function ProductCreateDialog({
           <div className="space-y-2">
             <Label>SKU</Label>
             <Input
-              placeholder="SKU"
+              placeholder="Contoh: HSRGB-001"
               value={form.sku}
               onChange={(e) => setForm((s) => ({ ...s, sku: e.target.value }))}
             />
@@ -155,7 +155,7 @@ export default function ProductCreateDialog({
           <div className="space-y-2">
             <Label>Harga</Label>
             <Input
-              placeholder="Harga"
+              placeholder="Contoh: 150000"
               inputMode="decimal"
               value={form.price}
               onChange={(e) => setForm((s) => ({ ...s, price: e.target.value }))}
@@ -165,7 +165,7 @@ export default function ProductCreateDialog({
           <div className="space-y-2">
             <Label>Stok</Label>
             <Input
-              placeholder="Stok"
+              placeholder="Contoh: 50"
               inputMode="numeric"
               value={form.stock}
               onChange={(e) => setForm((s) => ({ ...s, stock: e.target.value }))}
