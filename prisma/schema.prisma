@@ -215,3 +215,22 @@ model ShopeeConnection {
   @@unique([shopId])
   @@index([userId])
 }
+
+model WebhookLog {
+  id            String    @id @default(cuid())
+  provider      String    // e.g., "SHOPEE"
+  eventType     String?   // e.g., "ORDER_UPDATE", "AUTHORIZATION_CHANGE"
+  payload       Json      // Raw JSON payload from Shopee
+  headers       Json?     // Request headers, useful for signature verification
+  receivedAt    DateTime  @default(now())
+  processedAt   DateTime?
+  status        String    // e.g., "PENDING", "PROCESSED", "FAILED"
+  errorMessage  String?
+  relatedEntity String?   // e.g., "Order", "Store"
+  relatedId     String?
+
+  @@index([provider])
+  @@index([eventType])
+  @@index([status])
+}
+}
