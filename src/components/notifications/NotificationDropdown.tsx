@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Bell, Package, MessageSquare, AlertTriangle, CheckCircle } from 'lucide-react';
+import { X, Bell, Package, MessageSquare, AlertTriangle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { id } from 'date-fns/locale';
 

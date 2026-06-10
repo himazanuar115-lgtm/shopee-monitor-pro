@@ -12,6 +12,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Report } from '@/types/report';
 import { formatCurrency } from '@/lib/utils';
 
+
+// Client Components do not receive params or searchParams as props directly.
+// They should use useParams() and useSearchParams() hooks if needed.
 export default function ReportsPage() {
   const { data: reports = [], isLoading } = useQuery({
     queryKey: ['reports'],
@@ -23,10 +26,10 @@ export default function ReportsPage() {
 
   const totals = useMemo(
     () => ({
-      revenue: reports.reduce((sum, report) => sum + (report.totalRevenue || 0), 0),
-      orders: reports.reduce((sum, report) => sum + (report.totalOrders || 0), 0),
-      chats: reports.reduce((sum, report) => sum + (report.totalChats || 0), 0),
-      products: reports.reduce((sum, report) => sum + (report.totalProducts || 0), 0),
+      revenue: reports?.reduce((sum, report) => sum + (report.totalRevenue || 0), 0) ?? 0,
+      orders: reports?.reduce((sum, report) => sum + (report.totalOrders || 0), 0) ?? 0,
+      chats: reports?.reduce((sum, report) => sum + (report.totalChats || 0), 0) ?? 0,
+      products: reports?.reduce((sum, report) => sum + (report.totalProducts || 0), 0) ?? 0,
     }),
     [reports]
   );
@@ -59,15 +62,15 @@ export default function ReportsPage() {
   const exportExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       reports.map((report) => ({
-        Judul: report.title,
-        Tipe: report.type,
-        Pendapatan: report.totalRevenue || 0,
-        Pesanan: report.totalOrders || 0,
-        Produk: report.totalProducts || 0,
-        Chat: report.totalChats || 0,
-        Konversi: report.conversionRate || 0,
-        Dari: new Date(report.startDate).toLocaleDateString('id-ID'),
-        Sampai: new Date(report.endDate).toLocaleDateString('id-ID'),
+        Judul: report.title ?? '-',
+        Tipe: report.type ?? '-',
+        Pendapatan: report.totalRevenue ?? 0,
+        Pesanan: report.totalOrders ?? 0,
+        Produk: report.totalProducts ?? 0,
+        Chat: report.totalChats ?? 0,
+        Konversi: report.conversionRate ?? 0,
+        Dari: report.startDate ? new Date(report.startDate).toLocaleDateString('id-ID') : '-',
+        Sampai: report.endDate ? new Date(report.endDate).toLocaleDateString('id-ID') : '-',
       }))
     );
 
@@ -83,11 +86,11 @@ export default function ReportsPage() {
           <h1 className="text-3xl font-bold text-emphasis">Laporan</h1>
           <p className="mt-2 text-muted">Ringkasan laporan dan ekspor data Saas untuk toko Shopee Anda.</p>
         </div>
-        <div className="flex flex-wrap gap-3">
-          <Button onClick={exportPDF}>
+        <div className="flex flex-wrap gap-3 md:mb-1">
+          <Button onClick={exportPDF} disabled={isLoading || reports.length === 0}>
             <FileText className="mr-2 h-4 w-4" /> Ekspor PDF
           </Button>
-          <Button variant="secondary" onClick={exportExcel}>
+          <Button variant="secondary" onClick={exportExcel} disabled={isLoading || reports.length === 0}>
             <Download className="mr-2 h-4 w-4" /> Ekspor Excel
           </Button>
         </div>
@@ -99,8 +102,12 @@ export default function ReportsPage() {
             <CardTitle className="text-sm">Total Laporan</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-semibold text-emphasis">{reports.length}</p>
-            <CardDescription>{reports.length ? 'Laporan yang sudah dibuat' : 'Belum ada laporan'}</CardDescription>
+            <p className="text-3xl font-semibold text-emphasis">
+              {isLoading ? '...' : reports.length}
+            </p>
+            <CardDescription>
+              {reports.length > 0 ? 'Laporan yang sudah dibuat' : 'Belum ada laporan'}
+            </CardDescription>
           </CardContent>
         </Card>
 
@@ -109,7 +116,9 @@ export default function ReportsPage() {
             <CardTitle className="text-sm">Pendapatan</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-semibold text-emphasis">{formatCurrency(totals.revenue)}</p>
+            <p className="text-3xl font-semibold text-emphasis">
+              {isLoading ? '...' : formatCurrency(totals.revenue)}
+            </p>
             <CardDescription>Total pendapatan di semua laporan</CardDescription>
           </CardContent>
         </Card>
@@ -119,7 +128,9 @@ export default function ReportsPage() {
             <CardTitle className="text-sm">Total Pesanan</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-semibold text-emphasis">{totals.orders}</p>
+            <p className="text-3xl font-semibold text-emphasis">
+              {isLoading ? '...' : totals.orders}
+            </p>
             <CardDescription>Ringkasan pesanan semua laporan</CardDescription>
           </CardContent>
         </Card>
@@ -130,7 +141,7 @@ export default function ReportsPage() {
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-semibold text-emphasis">
-              {reports.length
+              {!isLoading && reports.length
                 ? `${(
                     reports.reduce((sum, report) => sum + (report.conversionRate || 0), 0) /
                     reports.length
@@ -177,8 +188,8 @@ export default function ReportsPage() {
                   <TableRow key={report.id}>
                     <TableCell className="font-medium text-emphasis">{report.title}</TableCell>
                     <TableCell>{report.type}</TableCell>
-                    <TableCell>{new Date(report.startDate).toLocaleDateString('id-ID')}</TableCell>
-                    <TableCell>{new Date(report.endDate).toLocaleDateString('id-ID')}</TableCell>
+                    <TableCell>{report.startDate ? new Date(report.startDate).toLocaleDateString('id-ID') : '-'}</TableCell>
+                    <TableCell>{report.endDate ? new Date(report.endDate).toLocaleDateString('id-ID') : '-'}</TableCell>
                     <TableCell className="text-right font-medium text-emphasis">
                       {formatCurrency(report.totalRevenue || 0)}
                     </TableCell>

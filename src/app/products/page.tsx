@@ -81,20 +81,27 @@ export default function ProductsPage() {
           <h1 className="text-3xl font-bold text-emphasis">Produk</h1>
           <p className="mt-2 text-muted">Kelola semua produk dari toko Anda</p>
         </div>
+        
         {/* Product create dialog */}
         <ProductCreateDialog
           open={isAddOpen}
           onOpenChange={setIsAddOpen}
           stores={stores}
         />
-        <Button
+        
+        {/* GANTI TOTAL DENGAN BUTTON HTML BIASA INI UNTUK selamanya */}
+        <button
           type="button"
-          onClick={() => setIsAddOpen(true)}
-          disabled={stores.length === 0}
+          onClick={() => {
+            console.log("TOMBOL BERHASIL DIKLIK, BOS!");
+            alert("Tombol berfungsi!");
+            setIsAddOpen(true);
+          }}
+          className="bg-blue-600 text-white px-4 py-2 rounded-md font-bold relative z-50"
         >
-          <Plus className="mr-2 h-4 w-4" />
-          Tambah Produk
-        </Button>
+          <Plus className="mr-2 inline h-4 w-4" />
+          Tambah Produk Baru
+        </button>
       </div>
 
       {/* Stats */}

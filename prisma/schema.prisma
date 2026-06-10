@@ -233,4 +233,4 @@ model WebhookLog {
   @@index([eventType])
   @@index([status])
 }
-}
+
