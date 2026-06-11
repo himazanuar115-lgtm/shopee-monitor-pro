@@ -1,0 +1,22 @@
+[33ma5070c8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m feat: Implement Shopee Dashboard with multiple pages and API integration
+[33m8008b12[m checkpoint: pre-design-upgrade
+[33m2eeb59b[m Feat: Complete local Shopee auth bypass and premium notification UI integration
+[33m5527e79[m Sebelum perbaikan bug auth dan UI dropdown
+[33m29f110e[m Checkpoint: Backend bypass shopee siap, bersiap menimpa UI notifikasi
+[33m83eedee[m Fix: Resolve TS2307 import path in order sync route using path alias
+[33m8967c04[m Phase 6 Complete: Production scripts configured and architecture finalized
+[33m6ae6b52[m Checkpoint: Langkah 1 Webhook Sukses, Siap Membuat Endpoint
+[33me6f9cb5[m Phase 4 Complete: Real Shopee OAuth, Product Sync integrated, and Order Sync implemented
+[33mefeca86[m Complete Phase 3 stabilization
+[33mc137e41[m Add manual product creation dialog
+[33m4393f7b[m Stable Phase 3 audit verified
+[33maa7bd7a[m Step 7: Add API routes and Pages (login, register, dashboard, api endpoints)
+[33m112f464[m Step 3: Add all TypeScript types
+[33mb46e94c[m Step 6: Add dashboard components (StatCard, Chart, RecentOrders, RecentChats, LowStockProducts)
+[33mb9d923e[m Step 5: Add layout components (Sidebar, Header, NotificationBell)
+[33m54b1246[m Step 4: Add UI components (button, card, input, label, skeleton, table, select, badge, dialog)
+[33m174c0f8[m Step 3: Add all TypeScript type definitions
+[33m07d6aa5[m Step 2: Add library files (utils, db, constants, auth, api-client, middleware)
+[33m8f7f5a5[m Add all configuration files and basic setup
+[33mbf553d1[m Step 1: Create package.json with all dependencies
+[33m469bfd7[m Step 8: Create prisma/schema.prisma
